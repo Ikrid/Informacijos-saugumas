@@ -1,0 +1,14 @@
+C:\Users\adamn\source\repos\Math2\Math2\bin\Debug\net6.0\Math2.exe
+C:\Users\adamn\source\repos\Math2\Math2\bin\Debug\net6.0\Math2.deps.json
+C:\Users\adamn\source\repos\Math2\Math2\bin\Debug\net6.0\Math2.runtimeconfig.json
+C:\Users\adamn\source\repos\Math2\Math2\bin\Debug\net6.0\Math2.dll
+C:\Users\adamn\source\repos\Math2\Math2\bin\Debug\net6.0\Math2.pdb
+C:\Users\adamn\source\repos\Math2\Math2\obj\Debug\net6.0\Math2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\adamn\source\repos\Math2\Math2\obj\Debug\net6.0\Math2.AssemblyInfoInputs.cache
+C:\Users\adamn\source\repos\Math2\Math2\obj\Debug\net6.0\Math2.AssemblyInfo.cs
+C:\Users\adamn\source\repos\Math2\Math2\obj\Debug\net6.0\Math2.csproj.CoreCompileInputs.cache
+C:\Users\adamn\source\repos\Math2\Math2\obj\Debug\net6.0\Math2.dll
+C:\Users\adamn\source\repos\Math2\Math2\obj\Debug\net6.0\refint\Math2.dll
+C:\Users\adamn\source\repos\Math2\Math2\obj\Debug\net6.0\Math2.pdb
+C:\Users\adamn\source\repos\Math2\Math2\obj\Debug\net6.0\Math2.genruntimeconfig.cache
+C:\Users\adamn\source\repos\Math2\Math2\obj\Debug\net6.0\ref\Math2.dll
