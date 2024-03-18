@@ -1,0 +1,92 @@
+using System;
+using System.Security.Cryptography;
+using System.Text;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Įveskite tekstą:");
+        string text = Console.ReadLine();
+
+        Console.WriteLine("Įveskite slaptažodį:");
+        string password = Console.ReadLine();
+
+        Console.WriteLine("Pasirinkite veiksmą (1 - šifravimas, 2 - dešifravimas):");
+        int choice = int.Parse(Console.ReadLine());
+
+        string result = "";
+        switch (choice)
+        {
+            case 1:
+                result = Encrypt(text, password);
+                Console.WriteLine("Užšifruotas tekstas: " + result);
+                break;
+            case 2:
+                result = Decrypt(text, password);
+                Console.WriteLine("Atkoduotas tekstas: " + result);
+                break;
+            default:
+                Console.WriteLine("Pasirinktas neteisingas veiksmas.");
+                break;
+        }
+    }
+
+    static string Encrypt(string plainText, string password)
+    {
+        byte[] salt = Encoding.UTF8.GetBytes("SomeRandomSalt");
+
+        using (Aes aesAlg = Aes.Create())
+        {
+            Rfc2898DeriveBytes keyDerivation = new Rfc2898DeriveBytes(password, salt);
+            aesAlg.Key = keyDerivation.GetBytes(aesAlg.KeySize / 8);
+            aesAlg.GenerateIV();
+
+            ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+            using (var msEncrypt = new System.IO.MemoryStream())
+            {
+                using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                {
+                    using (var swEncrypt = new System.IO.StreamWriter(csEncrypt))
+                    {
+                        swEncrypt.Write(plainText);
+                    }
+                }
+
+                byte[] iv = aesAlg.IV;
+                byte[] encryptedBytes = msEncrypt.ToArray();
+
+                return Convert.ToBase64String(iv) + ":" + Convert.ToBase64String(encryptedBytes);
+            }
+        }
+    }
+
+    static string Decrypt(string encryptedText, string password)
+    {
+        byte[] salt = Encoding.UTF8.GetBytes("SomeRandomSalt");
+        string[] parts = encryptedText.Split(':');
+        byte[] iv = Convert.FromBase64String(parts[0]);
+        byte[] cipherText = Convert.FromBase64String(parts[1]);
+
+        using (Aes aesAlg = Aes.Create())
+        {
+            Rfc2898DeriveBytes keyDerivation = new Rfc2898DeriveBytes(password, salt);
+            aesAlg.Key = keyDerivation.GetBytes(aesAlg.KeySize / 8);
+            aesAlg.IV = iv;
+
+            ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+            using (var msDecrypt = new System.IO.MemoryStream(cipherText))
+            {
+                using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                {
+                    using (var srDecrypt = new System.IO.StreamReader(csDecrypt))
+                    {
+                        return srDecrypt.ReadToEnd();
+                    }
+                }
+            }
+        }
+    }
+}
