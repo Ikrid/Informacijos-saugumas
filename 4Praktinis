@@ -1,0 +1,80 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace _4InfSau
+{
+    public partial class Form1 : Form
+    {
+        private RSACryptoServiceProvider rsa;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+            
+            rsa = new RSACryptoServiceProvider();
+        }
+
+        private byte[] CreateSignature(byte[] data)
+        {
+            return rsa.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        }
+
+        private bool VerifySignature(byte[] data, byte[] signature)
+        {
+            return rsa.VerifyData(data, signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string textToVerify = textBox3.Text;
+                byte[] textBytes = Encoding.UTF8.GetBytes(textToVerify);
+                byte[] signature = Convert.FromBase64String(textBox2.Text);
+
+                bool isValidSignature = VerifySignature(textBytes, signature);
+
+                if (isValidSignature)
+                {
+                    MessageBox.Show("Parašas patvirtintas.", "Patvirtinta", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show("Parašas nepatvirtintas.", "Nepatvirtinta", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (CryptographicException ex)
+            {
+                MessageBox.Show("Klaida patikrinant parašą: " + ex.Message, "Klaida", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string originalusTekstas = textBox1.Text;
+                byte[] originaliBytes = Encoding.UTF8.GetBytes(originalusTekstas);
+
+                byte[] signature = CreateSignature(originaliBytes);
+
+                string signatureString = Convert.ToBase64String(signature);
+
+                textBox2.Text = signatureString;
+            }
+            catch (CryptographicException ex)
+            {
+                MessageBox.Show("Klaida kurdant parašą: " + ex.Message, "Klaida", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+    }
+}
